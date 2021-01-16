@@ -68,17 +68,21 @@ function updateDOM() {
   }
   // Backlog Column
   backlogList.textContent = '';
-  progressList.textContent='';
-  completeList.textContent='';
-  onHoldList.textContent='';
-
-  backlogListArray.forEach((element,index) => {
+  backlogListArray.forEach((element) => {
     createItemEl(backlogList,element);
-    createItemEl(progressList, progressListArray[index]);
-    createItemEl(completeList, completeListArray[index]);
-    createItemEl(onHoldList, onHoldListArray[index]);
   });
-
+  progressList.textContent='';
+  progressListArray.forEach(element => {
+    createItemEl(progressList,element);
+  });
+  completeList.textContent='';
+  completeListArray.forEach(element => {
+    createItemEl(completeList, element);
+  });
+  onHoldList.textContent='';
+  onHoldListArray.forEach(element =>{
+    createItemEl(onHoldList, element);
+  });
   // Run getSavedColumns only once, Update Local Storage
   updatedOnLoad = true;
   updateSavedColumns();
@@ -86,31 +90,30 @@ function updateDOM() {
 
 // Allows arrays to reflect Drag and Drop items
 function reBuildArrays(){
-  let backlogListArray = [];
+  backlogListArray = [];
   for (let index = 0; index < backlogList.children.length; index++) {
     backlogListArray.push(backlogList.children[index].textContent);
   }
-  let progressListArray = [];
+  progressListArray = [];
   for (let index = 0; index < progressList.children.length; index++) {
     progressListArray.push(progressList.children[index].textContent);
   }
-  let completeListArray = [];
+  completeListArray = [];
   for (let index = 0; index < completeList.children.length; index++) {
     completeListArray.push(completeList.children[index].textContent);
   }
-  let onHoldListArray = [];
+  onHoldListArray = [];
   for (let index = 0; index < onHoldList.children.length; index++) {
     onHoldListArray.push(onHoldList.children[index].textContent);
   }
   updateDOM();
 }
 // When Item Starts Dragging 
+updateDOM();
 function drag(e){
   draggedItem = e.target;
   console.log(draggedItem); 
 }
-updateDOM();
-
 // Columns Allows for Item to Drop
 function allowDrop(e){
   console.log('Allow Drop');
@@ -134,6 +137,7 @@ function drop(e){
   // Add Item to Column
   const parent = listColumns[currentColumn];
   parent.appendChild(draggedItem);    
-  
+  console.log(backlogList.children);
+  console.log(updatedOnLoad);
   reBuildArrays();
 }
